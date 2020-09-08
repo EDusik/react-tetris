@@ -110,7 +110,7 @@ const Tetris = () => {
 
     useEffect(()=> {
         startGame();
-        // eslint-disable-next-line
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
   
     return (
