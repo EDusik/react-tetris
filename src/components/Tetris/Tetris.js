@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactAudioPlayer from 'react-audio-player';
 
 import { createStage, checkCollision } from '../../gameHelpers';
 import { StyledTetrisWrapper, StyledTetris } from '../../styles/StyledTetris';
-
 import { useGameStatus } from '../../hooks/useGameStatus';
 import { useInterval } from '../../hooks/useInterval';
 import { usePlayer } from '../../hooks/usePlayer';
 import { useStage } from '../../hooks/useStage';
 
+import AudioPlayerController from '../AudioPlayer/AudioPlayer';
 import Display from '../Display/Display';
 import Stage from '../Stage/Stage';
 import StartButton from '../StartButton/StartButton';
 
+import gameOverMusic from  '../../assets/music/game-over.mp3';
+import music from  '../../assets/music/tetris-gameboy.mp3';
+
 const Tetris = () => {
+
     const [dropTime, setDropTime] = useState(null);
     const [gameOver, setGameOver] = useState(false);
+    const [muted, setMuted] = useState(false);
 
     const [player, updatePlayerPosition, resetPlayer, playerRotate] = usePlayer();
     const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
@@ -98,20 +104,39 @@ const Tetris = () => {
         drop();
     }, dropTime);
 
+    const handleMuted = () => {
+        setMuted(!muted);
+    }
+
+    useEffect(()=> {
+        startGame();
+    }, []);
+  
     return (
         <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={e => move(e)} onKeyUp={keyUp}>
             <StyledTetris>  
                 <Stage stage={stage} />
                     <aside>
+                        <AudioPlayerController muted={muted} callback={handleMuted} />
+                        <div>  
+                            <ReactAudioPlayer
+                                controls={false}
+                                src={!gameOver ? music : gameOverMusic}
+                                autoPlay={true}
+                                loop={!gameOver ? true : false}
+                                muted={muted}
+                            />
+                        </div>
+                        <Display text={!gameOver ? `Score: ${score}` : `You did: ${score} points!`} />
                         {gameOver ? (
                             <Display gameOver={gameOver} text="Game Over" />
                         ): (
                             <div>
-                                <Display text={`Score: ${score}`} />
                                 <Display text={`Rows: ${rows}`} />
-                                <Display text={`Level: ${level}`} />      
+                                <Display text={`Level: ${level}`} />
                             </div>
                         )}
+                      
                         <StartButton callback={startGame} />  
                     </aside>      
             </StyledTetris>
