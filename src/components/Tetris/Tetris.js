@@ -110,6 +110,7 @@ const Tetris = () => {
 
     useEffect(()=> {
         startGame();
+        // eslint-disable-next-line
     }, []);
   
     return (

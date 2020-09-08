@@ -16,3 +16,12 @@ Tetris game made with React based in this <a href="https://www.udemy.com/course/
 This project use this technology:
 - [React](https://reactjs.org)
 </div>
+
+## :computer: Commands 
+<div id="commands"> 
+
+```npm
+npm install
+npm start
+```
+</div>
